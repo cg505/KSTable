@@ -4,9 +4,9 @@ Version 0.0
 
 ## Motivation
 
-[K-Shoot MANIA](https://www.kshootmania.com/) and [Unnamed SDVX Clone](https://github.com/Drewol/unnamed-sdvx-clone) are two games that provide a similar gameplay experience and use [the same charting format](https://github.com/m4saka/ksh/blob/master/ksh_format.md). There are many ommunity-made charts for these games (which we will call KSM charts for simplicity). KSM charts include difficulty levels assigned by the chart author - but singular ratings from 1-20 are often insufficient or inaccurate in describing the difficulty of a chart.
+[K-Shoot MANIA](https://www.kshootmania.com/) and [Unnamed SDVX Clone](https://github.com/Drewol/unnamed-sdvx-clone) are two games that provide a similar gameplay experience and use [the same charting format](https://github.com/m4saka/ksh/blob/master/ksh_format.md). There are many community-made charts for these games (which we will call KSM charts for simplicity). KSM charts include difficulty levels assigned by the chart author - but singular ratings from 1-20 are often insufficient or inaccurate in describing the difficulty of a chart.
 
-BMS has solved a similar problem by introducing "difficulty tables". A difficulty table is a centralized set of chart ratings. The table itself does not define the charts - they usually provided elsewhere for download, and a chart can have multiple different chart ratings in various tables.
+BMS has solved a similar problem by introducing "difficulty tables". A difficulty table is a centralized set of chart ratings. The table itself does not define the charts - they usually provided elsewhere for download, and one chart can have multiple different chart ratings in various tables.
 
 Some difficulty tables have already been established for KSM charts - for instance, the [os/us tables](https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vRH1beDh3I76qS-UUppW4_GibEj9bBDgcpO1XM4SrMylnSZYjyPjPYcMuQHaMrB-JGpIdsZtb-0wzmp/pubhtml) or the older [insane KSM table](https://docs.google.com/spreadsheets/d/1vdYPSEtdv1ngOUuspoKdOndFlFtFXjHbAeND_ujpock/htmlview).
 
@@ -76,12 +76,12 @@ The top-level KSTable object follows this schema:
 
 - `url` is the direct URL from which this JSON can be fetched. It is an optional parameter and should be omitted when the KSTable is not available at a consistent URL.
 
-  A GET request to this URL must return the most recent version of this KSTable, and set the HTTP header `Content-Type: application/json`.
+  A GET request to this URL must return the most recent version of this KSTable, and should set the HTTP header `Content-Type: application/json`.
 
   <details>
   <summary>Design decision: canonical URLs</summary>
 
-  In BMS tables, the canonical URL of a table is an human-readable HTML page which includes a `<meta>` element pointing to the header JSON URL. This is kind of nice because it lets clients and humans use the same URL to reference the table. However, it is a massive headache for client in practice, since they now have to use both HTML and JSON parsing.
+  In BMS tables, the canonical URL of a table is a human-readable HTML page which includes a `<meta>` element pointing to the header JSON URL. This is kind of nice because it lets clients and humans use the same URL to reference the table. However, in practice it is a massive headache for clients, since they now have to use both HTML and JSON parsing.
 
   Since the canonical URL defined here is _not_ human readable, the spec defines a different URL in `meta.homepage` which should serve that purpose. This is a minor usability annoyance for end-users but makes client implementation drastically simpler.
   </details>
@@ -98,7 +98,7 @@ The top-level KSTable object follows this schema:
 
   > Note: Clarifications or changes in this document that do not materially change the definition of the specification do not require any version bumps. Any change to the actual defined schema or permitted behavior requires a version bump.
 
-  > Note: The this key and its schema will _never_ change in future versions of the spec.
+  > Note: The `version` key and its schema will _never_ change in future versions of the spec.
 
 - `meta` is an object providing additional metadata about the table:
 
@@ -106,7 +106,7 @@ The top-level KSTable object follows this schema:
 
   - `description` is an optional human-readable description of the table.
 
-  - `updated` is the date the table was last modified, represented as an integer UTC unix time (number of seconds since the unix epoch).
+  - `updated` is the date the table was last modified, represented as an integer UTC unix time (number of seconds since the unix epoch). It is optional, but KSTable authors should not remove it between versions of the same table.
 
   KSTable authors can include additional keys here, but should strive to update the spec to include any additional useful keys so that they become standardized.
 
@@ -197,7 +197,7 @@ The chart object schema is meant to provide a reliable way to identify a specifi
   For KSON charts, this is exactly the value of `meta.difficulty.idx`.
 
   <details>
-  <summary>Design decision: using difficulty idx</summary>
+  <summary>Design decision: using difficulty index</summary>
 
   This specification should be resilient to the future, so we look to the KSON spec to determine the best way to handle difficulty. KSON has [an entire object dedicated to specifying the difficulty of a chart](https://github.com/m4saka/ksh2kson/blob/master/kson_format.md#metadifficulty). Realistically, for identification purposes, we are not too concerned with the difficulty name. In fact nearly every chart uses one of `light`, `challenge`, `extended`, or `infinite`, so the difficulty index value is probably sufficient.
 
@@ -208,7 +208,7 @@ The chart object schema is meant to provide a reliable way to identify a specifi
 
 - `hashes` defines hashes that can be used to identify the chart. Currently, there is only one.
 
-  > Note: Using a hash is the _only_ reliable way to identify a chart. You may expect other combinations of fields to be sufficient, for instance title+artist+pack+difficulty+level. You would be surprised that #curtaincall by sak + wellow has two Infinite 20 charts in B4UT×KUOC K-shoot mania Package 2016 - one is os5 and the other is os9*.
+  > Note: Using a hash is the _only_ reliable way to identify a chart. You may expect other combinations of fields to be sufficient, for instance title+artist+pack+difficulty+level. You would be surprised to find that #curtaincall by sak + wellow has two Infinite 20 charts in B4UT×KUOC K-shoot mania Package 2016 - one is os5 and the other is os9*.
 
   - `chart_file_sha1` is the SHA1 hash of the unmodified original chart file, represented as a lowercase hexidecimal string of length 40. "The unmodified original chart file" here refers to the KSH or KSON file for the chart.
 
@@ -251,4 +251,8 @@ The chart object schema is meant to provide a reliable way to identify a specifi
 
   Here, sabun means that the chart refers to resources (such as the jacket or the audio) from a chart song that is downloaded separately. The chart will not work properly unless both the the original chart song and the sabun are downloaded.
 
+  This should not be the same as `pack.name`.
+
 - `sabun_download_url` is a URL that can be used to download the chart song that the sabun depends on. It should be defined if the chart is a sabun, and it must not be defined if it isn't a sabun.
+
+  This should not be the same as `download_url`.
