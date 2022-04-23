@@ -6,7 +6,7 @@ Version 0.0
 
 [K-Shoot MANIA](https://www.kshootmania.com/) and [Unnamed SDVX Clone](https://github.com/Drewol/unnamed-sdvx-clone) are two games that provide a similar gameplay experience and use [the same charting format](https://github.com/m4saka/ksh/blob/master/ksh_format.md). There are many community-made charts for these games (which we will call KSM charts for simplicity). KSM charts include difficulty levels assigned by the chart author - but singular ratings from 1-20 are often insufficient or inaccurate in describing the difficulty of a chart.
 
-BMS has solved a similar problem by introducing "difficulty tables". A difficulty table is a centralized set of chart ratings. The table itself does not define the charts - they usually provided elsewhere for download, and one chart can have multiple different chart ratings in various tables.
+BMS has solved a similar problem by introducing "difficulty tables". A difficulty table is a centralized set of chart ratings. The table itself does not define the charts - they are usually provided elsewhere for download, and one chart can have multiple different chart ratings in various tables.
 
 Some difficulty tables have already been established for KSM charts - for instance, the [os/us tables](https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vRH1beDh3I76qS-UUppW4_GibEj9bBDgcpO1XM4SrMylnSZYjyPjPYcMuQHaMrB-JGpIdsZtb-0wzmp/pubhtml) or the older [insane KSM table](https://docs.google.com/spreadsheets/d/1vdYPSEtdv1ngOUuspoKdOndFlFtFXjHbAeND_ujpock/htmlview).
 
@@ -48,7 +48,7 @@ As far as I can tell, this is mostly useful because initially a client can fetch
 In practice, the data file for large BMS tables is no larger than a few MiB, so there is not a huge gain to loading lazily. The complexity of maintaining multiple files is not worth this benefit.
 </details>
 
-Unless otherwise specified below, a KSTable author must not include JSON keys are not defined as part of the spec. However, a consumer parsing a KSTable should be permissive of unexpected keys, in case the KSTable abides by a newer version of the spec.
+Unless otherwise specified below, a KSTable author must not include JSON keys that are not defined as part of the spec. However, a consumer parsing a KSTable should be permissive of unexpected keys, in case the KSTable abides by a newer version of the spec.
 
 The top-level KSTable object follows this schema:
 
