@@ -86,7 +86,9 @@ The top-level KSTable object follows this schema:
   Since the canonical URL defined here is _not_ human readable, the spec defines a different URL in `meta.homepage` which should serve that purpose. This is a minor usability annoyance for end-users but makes client implementation drastically simpler.
   </details>
 
-- `version` is an object corresponding to the version listed at the very top of this document. For version `x.y`, `breaking` is `x` and `minor` is `y`. The idea is that any backwards-compatible "minor" change to the specification will increment the "minor" version, but any breaking changes to the specification must increment the "breaking" version and reset the minor version to 0.
+- `version` is an object corresponding to the spec version listed at the very top of this document. For version `x.y`, `breaking` is `x` and `minor` is `y`. The idea is that any backwards-compatible "minor" change to the specification will increment the "minor" version, but any breaking changes to the specification must increment the "breaking" version and reset the minor version to 0.
+
+  > Note: To be clear, this is the version _of the specification_, not the version of the actual KSTable.
 
   KSTable authors must always use the exact version of the specification that their KSTable implements. For this version of the spec, that is `{"breaking": 0, "minor": 0}`. KSTable authors should always implement the latest version of the KSTable spec available in this document in this repository.
 
